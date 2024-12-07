@@ -1,0 +1,33 @@
+.sidebar {
+    background-color: #0f38c0 !important; /* Warna biru solid untuk sidebar */
+    opacity: 1 !important; /* Hilangkan transparansi */
+}
+
+.navbar-nav.sidebar .sidebar-brand {
+    background-color: #0f38c0 !important; /* Warna biru solid untuk brand sidebar */
+}
+
+
+.topbar {
+    background-color: #0f38c0 !important; /* Warna biru solid untuk bagian topbar */
+}
+
+.sidebar .nav-link {
+    color: #ffffff !important; /* Warna teks default */
+}
+
+.sidebar .nav-link i {
+    color: #ffffff !important; /* Warna ikon default */
+}
+
+.sidebar .nav-link:active,
+.sidebar .nav-link:focus,
+.sidebar .nav-link:hover {
+    color: #9a9c9e !important; /* Warna teks saat ikon diklik atau dalam keadaan aktif */
+}
+
+.sidebar .nav-link:active i,
+.sidebar .nav-link:focus i,
+.sidebar .nav-link:hover i {
+    color: #aaacaf !important; /* Warna ikon saat aktif atau diklik */
+}
