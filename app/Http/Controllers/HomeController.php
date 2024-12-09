@@ -2,7 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Buku;
+use App\Models\Profile;
+use App\Models\User;
+use App\Models\Kategori;
+use App\Models\Peminjaman;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+
 
 class HomeController extends Controller
 {
@@ -23,6 +31,20 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+
+        $iduser = Auth::id();
+        $profile = Profile::where('users_id', $iduser)->first();
+        $kategori = Kategori::count();
+        $buku = Buku::count();
+        $user = User::where('isAdmin', '0')->count();
+        $riwayat_pinjam = Peminjaman::with(['user', 'buku'])->orderBy('updated_at', 'desc')->get();
+        $jumlah_riwayat = Peminjaman::count();
+        $pinjamanUser = Peminjaman::where('users_id', $iduser)->where('tanggal_pengembalian', null)->count();
+
+        if (Auth::user()->isAdmin == 1) {
+            return view('AdminDashboard', compact('kategori', 'buku', 'user', 'profile', 'riwayat_pinjam', 'jumlah_riwayat'));
+        } else {
+            return view('AnggotaDashboard', compact('kategori', 'buku', 'profile', 'user', 'pinjamanUser'));
+        }
     }
 }

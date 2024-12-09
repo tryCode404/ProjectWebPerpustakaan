@@ -32,7 +32,10 @@
         <!-- Container Fluid-->
         <div class="container-fluid" id="container-wrapper">
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+            @yield('judul')
+          </div>
+          <div class="content">
+            @yield('content')
           </div>
 
           <!--Row-->
@@ -53,7 +56,14 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Batal</button>
-                <a href="login.html" class="btn btn-primary">Keluar</a>
+                <a href="{{ route('logout') }}" class="btn btn-outline-danger"
+                                        onclick="event.preventDefault();
+                                                    document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
+                                    </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
             </div>
         </div>
     </div>
@@ -88,6 +98,8 @@
   <script src="{{asset('template/js/ruang-admin.min.js')}}"></script>
   <script src="{{asset('template/vendor/chart.js/Chart.min.js')}}"></script>
   <script src="{{asset('template/js/demo/chart-area-demo.js')}}"></script>  
+  @stack('scripts')
+  @include('sweetalert::alert')
 </body>
 
 </html>

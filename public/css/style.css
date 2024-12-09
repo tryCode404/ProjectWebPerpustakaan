@@ -1,16 +1,16 @@
 .sidebar {
-    background-color: #0f38c0 !important; /* Warna biru solid untuk sidebar */
+    background: linear-gradient(135deg, #007bff, #00a2ff); /* Gradasi biru */
     opacity: 1 !important; /* Hilangkan transparansi */
 }
 
 .navbar-nav.sidebar .sidebar-brand {
-    background-color: #0f38c0 !important; /* Warna biru solid untuk brand sidebar */
+    background: linear-gradient(135deg, #007bff, #00a2ff); /* Gradasi biru untuk brand sidebar */
 }
-
 
 .topbar {
-    background-color: #0f38c0 !important; /* Warna biru solid untuk bagian topbar */
+    background: linear-gradient(135deg, #007bff, #00a2ff); /* Gradasi biru untuk topbar */
 }
+
 
 .sidebar .nav-link {
     color: #ffffff !important; /* Warna teks default */

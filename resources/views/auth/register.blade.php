@@ -14,7 +14,7 @@
 
     .auth-box {
         background: #fff;
-        padding: 40px;
+        padding: 30px;
         border-radius: 16px;
         box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.1);
         max-width: 800px;
