@@ -12,22 +12,16 @@ use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 
-
 class AnggotaController extends Controller
 {
     public function index()
     {
         $iduser = Auth::id();
-        $user = User::all()->where('isAdmin', '0');
+        $user = User::where('isAdmin', '0')->get(); // Ambil data user dengan isAdmin 0
         $profile = Profile::where('users_id', $iduser)->first();
         return view('anggota.tampil', ['anggota' => $user, 'profile' => $profile]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $iduser = Auth::id();
@@ -36,14 +30,9 @@ class AnggotaController extends Controller
         return view('anggota.tambah', ['user' => $user, 'profile' => $profile]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        // Validasi input
         $request->validate(
             [
                 'name' => 'required',
@@ -68,12 +57,14 @@ class AnggotaController extends Controller
             ]
         );
 
+        // Proses pembuatan user
         $user = User::create([
             'name' => $request['name'],
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
         ]);
 
+        // Proses pembuatan profil anggota
         Profile::create([
             'npm' => $request['npm'],
             'prodi' => $request['prodi'],
@@ -82,16 +73,13 @@ class AnggotaController extends Controller
             'users_id' => $user->id,
         ]);
 
+        // Menampilkan pesan sukses setelah data berhasil ditambahkan
         Alert::success('Success', 'Berhasil Menambah Anggota');
+
+        // Redirect ke halaman daftar anggota
         return redirect('/anggota');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $user = User::find($id);
@@ -100,12 +88,6 @@ class AnggotaController extends Controller
         return view('anggota.detail', ['user' => $user, 'profile' => $profile, 'pinjamanUser' => $pinjamanUser]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $user = User::find($id);
@@ -113,15 +95,12 @@ class AnggotaController extends Controller
         return view('anggota.edit', ['user' => $user, 'profile' => $profile]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
+        $profile = Profile::where('users_id', $id)->first();
+        $user = User::find($id);
+
+        // Validasi input
         $request->validate(
             [
                 'name' => 'required',
@@ -141,48 +120,49 @@ class AnggotaController extends Controller
                 'photoProfile.max' => "ukuran gambar tidak boleh lebih dari 2048 MB"
             ]
         );
-        $user = User::find($id);
-        $profile = Profile::find($id);
 
+        // Proses upload gambar jika ada
         if ($request->has('photoProfile')) {
-            $path = 'images/photoProifle';
+            $path = 'images/photoProfile';
 
-            File::delete($path . $profile->photoProfile);
+            if ($profile->photoProfile && File::exists(public_path($path . '/' . $profile->photoProfile))) {
+                File::delete(public_path($path . '/' . $profile->photoProfile));
+            }
 
             $namaGambar = time() . '.' . $request->photoProfile->extension();
-
-            $request->photoProfile->move(public_path('images/photoProfile'), $namaGambar);
-
+            $request->photoProfile->move(public_path($path), $namaGambar);
             $profile->photoProfile = $namaGambar;
-
-            $profile->save();
         }
+
+        // Update data user dan profile
         $user->name = $request->name;
         $profile->npm = $request->npm;
         $profile->prodi = $request->prodi;
         $profile->alamat = $request->alamat;
         $profile->noTelp = $request->noTelp;
 
+        // Simpan perubahan
         $profile->save();
         $user->save();
 
+        // Menampilkan pesan sukses setelah data berhasil diubah
         Alert::success('Success', 'Berhasil Mengubah Profile');
+
+        // Redirect ke halaman daftar anggota
         return redirect('/anggota');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $user = User::find($id);
 
+        // Hapus data user dan terkait
         $user->delete();
 
+        // Menampilkan pesan sukses setelah data dihapus
         Alert::success('Berhasil', 'Berhasil Mengapus Anggota');
+
+        // Redirect ke halaman daftar anggota
         return redirect('anggota');
     }
 }

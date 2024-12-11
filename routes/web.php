@@ -13,13 +13,12 @@ use App\Http\Controllers\RiwayatPinjamController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 
 /*
-|--------------------------------------------------------------------------
+|----------------------------------------------------------------------
 | Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
+|----------------------------------------------------------------------
+| Here is where you can register web routes for your application.
+| These routes are loaded by the RouteServiceProvider within a group
+| which contains the "web" middleware group. Now create something great!
 |
 */
 
@@ -28,19 +27,29 @@ Route::get('/', function () {
     // return view('welcome'); // Pilih ini jika ingin menampilkan halaman default Laravel
 });
 
+// Auth routes (login, register, password reset)
 Auth::routes();
 
+// Middleware 'auth' untuk mengamankan route di bawah ini
 Route::middleware(['auth'])->group(function () {
+    // Route untuk halaman home setelah login
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
+
+    // Route resource untuk kategori, buku, anggota, dan lainnya
     Route::resource('kategori', KategoriController::class);
     Route::resource('buku', BukuController::class);
     Route::resource('anggota', AnggotaController::class);
-    Route::resource('profile', ProfileController::class)->only(['index', 'update', 'edit']);
+
+    // Profile route (hanya index, edit, dan update)
+    Route::resource('profile', ProfileController::class)->only(['index', 'edit', 'update']);
+
+    // Route untuk riwayat peminjaman
     Route::resource('peminjaman', RiwayatPinjamController::class);
-    Route::get('/cetaklaporan', CetakLaporanController::class);
+
+    // Route untuk cetak laporan
+    Route::get('/cetaklaporan', CetakLaporanController::class)->name('cetak.laporan');
+
+    // Route untuk pengembalian
     Route::get('/pengembalian', [PengembalianController::class, 'index']);
     Route::post('/pengembalian', [PengembalianController::class, 'pengembalian']);
-
-    Route::get('/cetak-laporan', CetakLaporanController::class)->name('cetak.laporan');
-    Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 });

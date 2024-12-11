@@ -53,7 +53,7 @@ class ProfileController extends Controller
         $user = User::where('id', $iduser)->first();
 
         if ($request->has('photoProfile')) {
-            $path = 'images/photoProifle';
+            $path = 'images/photoProfile';
 
             File::delete($path . $profile->photoProfile);
 

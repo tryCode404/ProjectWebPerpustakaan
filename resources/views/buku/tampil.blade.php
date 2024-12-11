@@ -117,9 +117,12 @@
 
     <div class="d-flex justify-content-between mx-2 my-2">
         <p class="text-primary my-2">Menampilkan {{ $buku->currentPage() }} dari {{ $buku->lastPage() }} Halaman</p>
-
-        {{ $buku->links() }}
+        
+        <div class="pagination-container">
+            {{ $buku->onEachSide(1)->links('pagination::bootstrap-4') }}
+        </div>
     </div>
+    
 
 </div>
 @endsection

@@ -52,29 +52,26 @@
                     <tbody>
                         @forelse ($anggota as $key => $item)
                             <tr>
-                                <th scope="row">{{ $key }}</th>
+                                <th scope="row">{{ $key + 1 }}</th>  <!-- Menampilkan nomor urut yang benar -->
                                 <td>{{ $item->name }}</td>
-                                <td>{{ $item->profile->npm }}</td>
+                                <td>{{ $item->profile ? $item->profile->npm : 'NPM Tidak Tersedia' }}</td>
                                 <td>{{ $item->email }}</td>
                                 <td>
-
                                     @if (Auth::user()->isAdmin == 1)
-                                        <button class="btn btn-info"><a href="/anggota/{{ $item->id }}"
-                                                style="text-decoration: none; color:white;"><i class="fa-solid fa-circle-info"></i></a></button>
-                                        <button class="btn btn-warning"><a href="/anggota/{{ $item->id }}/edit"
-                                                style="text-decoration: none;color:white"><i class="fa-solid fa-pen-to-square"></i></a></button>
-                                        <button class="btn btn-danger"><a data-toggle="modal"
-                                                data-target="#DeleteModal{{ $item->id }}"><i class="fa-solid fa-trash"></i></a></button>
+                                        <!-- Tombol untuk admin -->
+                                        <a href="/anggota/{{ $item->id }}" class="btn btn-info"><i class="fa-solid fa-circle-info"></i></a>
+                                        <a href="/anggota/{{ $item->id }}/edit" class="btn btn-warning"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        <button class="btn btn-danger" data-toggle="modal" data-target="#DeleteModal{{ $item->id }}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
 
-                                        <!--Delete Modal -->
-                                        <div class="modal fade" id="DeleteModal{{ $item->id }}" tabindex="-1" role="dialog"
-                                            aria-labelledby="ModalLabelDelete" aria-hidden="true">
+                                        <!-- Modal Delete -->
+                                        <div class="modal fade" id="DeleteModal{{ $item->id }}" tabindex="-1" role="dialog" aria-labelledby="ModalLabelDelete" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="ModalLabelDelete">Ohh No!</h5>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
@@ -82,33 +79,32 @@
                                                         <p>Are you sure you want to delete?</p>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-outline-primary"
-                                                            data-dismiss="modal">Cancel</button>
+                                                        <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
                                                         <form action="/anggota/{{ $item->id }}" method="post">
                                                             @csrf
                                                             @method('delete')
-                                                            <input type="submit"
-                                                                value="delete"class="btn btn-outline-danger">
+                                                            <input type="submit" value="delete" class="btn btn-outline-danger">
                                                         </form>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    @endif
+
+                                    @if (Auth::user()->isAdmin == 0)
+                                        <!-- Tombol untuk non-admin -->
+                                        <a href="/kategori/{{ $item->id }}" class="btn-sm btn-info px-3 py-2">Detail</a>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center">Tidak ada anggota yang ditemukan</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-            @endif
-
-            @if (Auth::user()->isAdmin == 0)
-                <a href="/kategori/{{ $item->id }}" class="btn-sm btn-info px-3 py-2">Detail</a>
-            @endif
-
-            </form>
-            </td>
-            </tr>
-        @empty
-            @endforelse
-            </tbody>
-            </table>
         </div>
-    </div>
     </div>
 @endsection
