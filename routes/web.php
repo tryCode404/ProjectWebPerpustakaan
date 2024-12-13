@@ -52,4 +52,9 @@ Route::middleware(['auth'])->group(function () {
     // Route untuk pengembalian
     Route::get('/pengembalian', [PengembalianController::class, 'index']);
     Route::post('/pengembalian', [PengembalianController::class, 'pengembalian']);
+    // Rute untuk mengirimkan email reset password
+    Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+        ->name('password.email'); // Maks 10 permintaan per menit
+
+
 });
